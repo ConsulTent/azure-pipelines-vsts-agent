@@ -1,0 +1,28 @@
+# Test binary, built with `go test -c`
+*.test
+
+# env file
+.env
+
+# Agent session dirs
+.zcode/
+.mimosa/
+
+# Operator scratch artifacts (never source)
+.claude/
+/.superpowers/
+
+# SDD worktrees
+.worktrees/
+
+# Agent working status + design working docs (never source)
+WORKING_STATUS.json
+CLAUDE.md
+PRODUCT.md
+DESIGN.md
+.impeccable/
+
+# Local act / e2e test artifacts
+.secrets
+docker-image.act.yml
+act-run.log

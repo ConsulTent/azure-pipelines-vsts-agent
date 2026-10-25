@@ -1,0 +1,57 @@
+name: Docker Image
+
+on:
+  schedule:
+    - cron: '17 4 1 * *' # 1st of month, 04:17 UTC (off-peak minute; top-of-hour is congested)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        ubuntu: ['22.04', '24.04', '26.04']
+    steps:
+      - name: Checkout (path context required so the sed below reaches the build)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Inject git version
+        run: |
+          GITVER="$(git describe --always --long)"
+          sed -i "s/XXGITVERXX/${GITVER}/g" ubuntu/Dockerfile
+
+      - name: Compute tags
+        id: tags
+        run: |
+          {
+            echo "tags<<EOF"
+            echo "consultent/azure-pipelines-vsts-agent:ubuntu-${{ matrix.ubuntu }}"
+            echo "consultent/azure-pipelines-vsts-agent:${{ matrix.ubuntu }}-${{ github.run_number }}-${{ github.run_id }}"
+            if [ "${{ matrix.ubuntu }}" = "26.04" ]; then
+              echo "consultent/azure-pipelines-vsts-agent:latest"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PAT }}
+
+      - name: Build & push
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: ubuntu # path context; the default Git context would ignore the sed above
+          build-args: |
+            UBUNTU_VERSION=${{ matrix.ubuntu }}
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
