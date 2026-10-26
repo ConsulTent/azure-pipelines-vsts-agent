@@ -25,10 +25,11 @@ jobs:
           - variant: "26.04"
             base: "ubuntu:26.04"
             rolling: "ubuntu-26.04"
-            is_latest: true
+            rolling_extra: "latest"
           - variant: "dhi-debian13"
             base: "dhi.io/debian-base:trixie-dev" # DHI hardened base; -dev ships apt; needs dhi.io login
             rolling: "dhi-debian13"
+            rolling_extra: "dhi-latest"
     steps:
       - name: Checkout (path context required so the sed below reaches the build)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -45,8 +46,8 @@ jobs:
             echo "tags<<EOF"
             echo "consultent/azure-pipelines-vsts-agent:${{ matrix.rolling }}"
             echo "consultent/azure-pipelines-vsts-agent:${{ matrix.variant }}-${{ github.run_number }}-${{ github.run_id }}"
-            if [ "${{ matrix.is_latest }}" = "true" ]; then
-              echo "consultent/azure-pipelines-vsts-agent:latest"
+            if [ -n "${{ matrix.rolling_extra }}" ]; then
+              echo "consultent/azure-pipelines-vsts-agent:${{ matrix.rolling_extra }}"
             fi
             echo "EOF"
           } >> "$GITHUB_OUTPUT"

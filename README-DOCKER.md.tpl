@@ -39,6 +39,6 @@ Includes the versions below as of %BUILD_DATE% (tag:%BUILD_TAG%):
 
 Azure CLI and Powershell are automatically updated to latest version upon build.  Please use tags to pin versions.
 
-Tags come in three kinds: rolling tags (`latest`, `ubuntu-22.04`, `ubuntu-24.04`, `ubuntu-26.04`, `dhi-debian13`) are mutable and re-pointed by every build; per-build tags (`<variant>-<run_number>-<run_id>`, e.g. `26.04-2-40245352308`) are immutable — protected by Docker Hub's selective tag immutability — and always resolve to exactly the image built that day; monthly version tags (`<year>-<month>-<az cli version>-<powershell version>`, e.g. `2026-10-2.91.0-7.6.8`) are immutable and name the exact Azure CLI and PowerShell versions inside that month's 26.04/latest build.
+Tags come in three kinds: rolling tags (`latest`, `ubuntu-22.04`, `ubuntu-24.04`, `ubuntu-26.04`, `dhi-latest`, `dhi-debian13`) are mutable and re-pointed by every build; per-build tags (`<variant>-<run_number>-<run_id>`, e.g. `26.04-2-40245352308`) are immutable — protected by Docker Hub's selective tag immutability — and always resolve to exactly the image built that day; monthly version tags (`<year>-<month>-<az cli version>-<powershell version>`, e.g. `2026-10-2.91.0-7.6.8`) are immutable and name the exact Azure CLI and PowerShell versions inside that month's 26.04/latest build.
 
 Support available: <a href="mailto:consul+client@consultent.ltd?Subject=Support+Needed+for+Azure" target="_blank">consul+docker@consultent.ltd</a>

@@ -25,7 +25,7 @@ docker run -d --name vsts-agent \
 
 Three kinds of tags, with different guarantees:
 
-- **Rolling tags are mutable** and re-pointed by every build: `latest` (newest LTS, currently Ubuntu 26.04), `ubuntu-22.04` / `ubuntu-24.04` / `ubuntu-26.04`, and `dhi-debian13` (the hardened-base flavor). Pull these for the latest monthly build.
+- **Rolling tags are mutable** and re-pointed by every build: `latest` (newest LTS, currently Ubuntu 26.04), `ubuntu-22.04` / `ubuntu-24.04` / `ubuntu-26.04`, and `dhi-latest` / `dhi-debian13` (the hardened-base flavor). Pull these for the latest monthly build.
 - **Per-build tags are immutable**: `<variant>-<run_number>-<run_id>`, e.g. `26.04-2-40245352308`. Docker Hub's selective tag immutability protects them, so a build tag always resolves to exactly the image built that day. Pin one when you need reproducibility.
 - **Monthly version tags** are immutable and describe the tools inside: `<year>-<month>-<az cli version>-<powershell version>`, e.g. `2026-10-2.91.0-7.6.8`. After each successful monthly build, the 26.04/`latest` image is re-tagged with the exact Azure CLI and PowerShell versions it ships — one tag answers "what tools did the October build have?".
 

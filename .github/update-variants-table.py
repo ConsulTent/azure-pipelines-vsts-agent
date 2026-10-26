@@ -37,6 +37,7 @@ VARIANTS = [
     ("dhi-debian13", "dhi-debian13", "Debian 13 (DHI hardened)"),
 ]
 LATEST_VARIANT = "26.04"
+ROLLING_ANNOTATIONS = {"26.04": " (`latest`)", "dhi-debian13": " (`dhi-latest`)"}
 VSTART, VEND = "<!-- variants:start -->", "<!-- variants:end -->"
 SSTART, SEND = "<!-- versions:start -->", "<!-- versions:end -->"
 README = "README.md"
@@ -115,7 +116,7 @@ def build_variants_table(status, builds, run_number, run_id, today):
         else:
             tag, day = builds.get(rolling, ("—", ""))
             word, color = conclusion, "red"
-        rolling_cell = f"`{rolling}`" + (" (`latest`)" if variant == LATEST_VARIANT else "")
+        rolling_cell = f"`{rolling}`" + ROLLING_ANNOTATIONS.get(variant, "")
         badge_name = variant.replace("-", "--") # shields: a literal dash is "--"
         lines.append(
             f"| {display} | ![status](https://img.shields.io/badge/{badge_name}-{word}-{color})"
