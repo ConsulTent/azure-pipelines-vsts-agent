@@ -2,7 +2,6 @@
 
 [![Docker Image](https://github.com/ConsulTent/azure-pipelines-vsts-agent/actions/workflows/docker-image.yml/badge.svg)](https://github.com/ConsulTent/azure-pipelines-vsts-agent/actions/workflows/docker-image.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/consultent/azure-pipelines-vsts-agent)](https://hub.docker.com/repository/docker/consultent/azure-pipelines-vsts-agent/general)
-[![Image Size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/latest)](https://hub.docker.com/repository/docker/consultent/azure-pipelines-vsts-agent/general)
 [![Version](https://img.shields.io/docker/v/consultent/azure-pipelines-vsts-agent?sort=date)](https://hub.docker.com/repository/docker/consultent/azure-pipelines-vsts-agent/tags)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg?logo=renovatebot)](https://renovatebot.com)
 
@@ -22,15 +21,22 @@ docker run -d --name vsts-agent \
 
 `VSTS_TOKEN` must be a personal access token with **Agent Pools (read, manage)** scope. See Microsoft's [self-hosted Linux agent docs](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/v2-linux) for how tokens and pools work.
 
-## Tags
+## Tags & variants
 
-| Tag | Ubuntu | Notes |
-| --- | --- | --- |
-| `latest` | 26.04 | Newest LTS; tracks the newest release |
-| `ubuntu-26.04` | 26.04 | |
-| `ubuntu-24.04` | 24.04 | |
-| `ubuntu-22.04` | 22.04 | Long-standing tag, kept for existing deployments |
-| `<ubuntu>-<run>-<id>` | any | Immutable per-build tag, e.g. `26.04-13-13852919624` |
+Two kinds of tags, with different guarantees:
+
+- **Rolling tags are mutable** and re-pointed by every build: `latest` (newest LTS, currently Ubuntu 26.04) and `ubuntu-22.04` / `ubuntu-24.04` / `ubuntu-26.04`. Pull these for the latest monthly build.
+- **Per-build tags are immutable**: `<ubuntu>-<run_number>-<run_id>`, e.g. `26.04-2-40245352308`. Docker Hub's selective tag immutability protects them, so a build tag always resolves to exactly the image built that day. Pin one when you need reproducibility.
+
+The table below updates after **every** build run: each row shows that variant's latest build status, and a variant's build tag advances only when its build succeeded — on failure the row keeps the last successful tag.
+
+<!-- variants:start -->
+| Distro | Status | Rolling tag | Current build | Size |
+| --- | --- | --- | --- | --- |
+| Ubuntu 22.04 | ![status](https://img.shields.io/badge/22.04-passing-brightgreen) | `ubuntu-22.04` | `22.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-22.04) |
+| Ubuntu 24.04 | ![status](https://img.shields.io/badge/24.04-passing-brightgreen) | `ubuntu-24.04` | `24.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-24.04) |
+| Ubuntu 26.04 (`latest`) | ![status](https://img.shields.io/badge/26.04-passing-brightgreen) | `ubuntu-26.04` | `26.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-26.04) |
+<!-- variants:end -->
 
 ## Environment variables
 
