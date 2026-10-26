@@ -40,7 +40,7 @@ LATEST_VARIANT = "26.04"
 VSTART, VEND = "<!-- variants:start -->", "<!-- variants:end -->"
 SSTART, SEND = "<!-- versions:start -->", "<!-- versions:end -->"
 README = "README.md"
-PROBE_SH = "az version 2>/dev/null | jq -r '.\"azure-cli\"'; pwsh --version 2>/dev/null | awk '{print $3}'"
+PROBE_SH = "az version 2>/dev/null | jq -r '.\"azure-cli\"' | tr -d '\\r'; pwsh --version 2>/dev/null | awk '{print $2}' | tr -d '\\r'"
 
 
 def fetch_conclusions(run_id):
@@ -97,6 +97,7 @@ def probe_versions(rolling):
     )
     lines = [ln.strip() for ln in proc.stdout.strip().splitlines() if ln.strip()]
     if proc.returncode != 0 or len(lines) < 2:
+        print(f"probe failed for {rolling}: rc={proc.returncode} stderr={proc.stderr.strip()[:300]!r}")
         return ("unknown", "unknown")
     return (lines[0], lines[1])
 
