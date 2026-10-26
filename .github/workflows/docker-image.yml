@@ -55,3 +55,31 @@ jobs:
             UBUNTU_VERSION=${{ matrix.ubuntu }}
           push: true
           tags: ${{ steps.tags.outputs.tags }}
+
+  update-readme:
+    needs: build-push
+    if: always() # the status board updates every run, success or failure
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # job-scoped; the build legs stay contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Update variants table
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 .github/update-variants-table.py \
+            --run ${{ github.run_id }} \
+            --number ${{ github.run_number }} \
+            --date "$(date -u +%F)"
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --cached --quiet || git commit -m "docs: update variant status (run ${{ github.run_number }})"
+          git push
