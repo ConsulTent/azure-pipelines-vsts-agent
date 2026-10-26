@@ -1,11 +1,11 @@
-# Azure Pipelines VSTS Agent
+# [`consultent/azure-pipelines-vsts-agent`](https://hub.docker.com/repository/docker/consultent/azure-pipelines-vsts-agent)
 
 [![Docker Image](https://github.com/ConsulTent/azure-pipelines-vsts-agent/actions/workflows/docker-image.yml/badge.svg)](https://github.com/ConsulTent/azure-pipelines-vsts-agent/actions/workflows/docker-image.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/consultent/azure-pipelines-vsts-agent)](https://hub.docker.com/repository/docker/consultent/azure-pipelines-vsts-agent/general)
 [![Version](https://img.shields.io/docker/v/consultent/azure-pipelines-vsts-agent?sort=date)](https://hub.docker.com/repository/docker/consultent/azure-pipelines-vsts-agent/tags)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg?logo=renovatebot)](https://renovatebot.com)
 
-An Ubuntu-based Docker image with the Azure CLI and PowerShell preinstalled that registers itself as a self-hosted Azure Pipelines agent on container start. It is a drop-in replacement for Microsoft's deprecated [`microsoft/vsts-agent`](https://hub.docker.com/r/microsoft/vsts-agent/) image, available on Docker Hub as [`consultent/azure-pipelines-vsts-agent`](https://hub.docker.com/repository/docker/consultent/azure-pipelines-vsts-agent/general).
+An Ubuntu-based Docker image with the Azure CLI and PowerShell preinstalled that registers itself as a self-hosted Azure Pipelines agent on container start. It is a drop-in replacement for Microsoft's deprecated [`microsoft/vsts-agent`](https://hub.docker.com/r/microsoft/vsts-agent/) image.
 
 The agent binary is not baked into the image — it is downloaded on every start, so each container always runs the newest agent release. Before registering, the container deletes any stale offline agent with the same name from the pool, so restarted pods do not collide with their old registration. Images are rebuilt monthly with fresh OS packages, Azure CLI, and PowerShell.
 
