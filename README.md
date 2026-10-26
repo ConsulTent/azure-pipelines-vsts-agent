@@ -36,9 +36,9 @@ The tables below update after **every** build run: each row shows that variant's
 <!-- variants:start -->
 | Distro | Status | Rolling tag | Current build | Size |
 | --- | --- | --- | --- | --- |
-| Ubuntu 22.04 | ![status](https://img.shields.io/badge/22.04-passing-brightgreen) | `ubuntu-22.04` | `22.04-4-40254868689` (2026-10-26) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-22.04) |
-| Ubuntu 24.04 | ![status](https://img.shields.io/badge/24.04-passing-brightgreen) | `ubuntu-24.04` | `24.04-4-40254868689` (2026-10-26) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-24.04) |
-| Ubuntu 26.04 | ![status](https://img.shields.io/badge/26.04-passing-brightgreen) | `ubuntu-26.04` (`latest`) | `26.04-4-40254868689` (2026-10-26) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-26.04) |
+| Ubuntu 22.04 | ![status](https://img.shields.io/badge/22.04-passing-brightgreen) | `ubuntu-22.04` | `22.04-5-40255870292` (2026-10-26) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-22.04) |
+| Ubuntu 24.04 | ![status](https://img.shields.io/badge/24.04-passing-brightgreen) | `ubuntu-24.04` | `24.04-5-40255870292` (2026-10-26) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-24.04) |
+| Ubuntu 26.04 | ![status](https://img.shields.io/badge/26.04-passing-brightgreen) | `ubuntu-26.04` (`latest`) | `26.04-5-40255870292` (2026-10-26) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-26.04) |
 | Debian 13 (DHI hardened) | ![status](https://img.shields.io/badge/dhi--debian13-failure-red) | `dhi-debian13` | `—` | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/dhi-debian13) |
 <!-- variants:end -->
 
