@@ -23,12 +23,15 @@ docker run -d --name vsts-agent \
 
 ## Tags & variants
 
-Two kinds of tags, with different guarantees:
+Three kinds of tags, with different guarantees:
 
-- **Rolling tags are mutable** and re-pointed by every build: `latest` (newest LTS, currently Ubuntu 26.04) and `ubuntu-22.04` / `ubuntu-24.04` / `ubuntu-26.04`. Pull these for the latest monthly build.
-- **Per-build tags are immutable**: `<ubuntu>-<run_number>-<run_id>`, e.g. `26.04-2-40245352308`. Docker Hub's selective tag immutability protects them, so a build tag always resolves to exactly the image built that day. Pin one when you need reproducibility.
+- **Rolling tags are mutable** and re-pointed by every build: `latest` (newest LTS, currently Ubuntu 26.04), `ubuntu-22.04` / `ubuntu-24.04` / `ubuntu-26.04`, and `dhi-debian13` (the hardened-base flavor). Pull these for the latest monthly build.
+- **Per-build tags are immutable**: `<variant>-<run_number>-<run_id>`, e.g. `26.04-2-40245352308`. Docker Hub's selective tag immutability protects them, so a build tag always resolves to exactly the image built that day. Pin one when you need reproducibility.
+- **Monthly version tags** are immutable and describe the tools inside: `<year>-<month>-<az cli version>-<powershell version>`, e.g. `2026-10-2.91.0-7.6.8`. After each successful monthly build, the 26.04/`latest` image is re-tagged with the exact Azure CLI and PowerShell versions it ships — one tag answers "what tools did the October build have?".
 
-The table below updates after **every** build run: each row shows that variant's latest build status, and a variant's build tag advances only when its build succeeded — on failure the row keeps the last successful tag.
+The tables below update after **every** build run: each row shows that variant's latest build status, and a variant's build tag advances only when its build succeeded — on failure the row keeps the last successful tag and versions.
+
+### Variants
 
 <!-- variants:start -->
 | Distro | Status | Rolling tag | Current build | Size |
@@ -36,7 +39,21 @@ The table below updates after **every** build run: each row shows that variant's
 | Ubuntu 22.04 | ![status](https://img.shields.io/badge/22.04-passing-brightgreen) | `ubuntu-22.04` | `22.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-22.04) |
 | Ubuntu 24.04 | ![status](https://img.shields.io/badge/24.04-passing-brightgreen) | `ubuntu-24.04` | `24.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-24.04) |
 | Ubuntu 26.04 (`latest`) | ![status](https://img.shields.io/badge/26.04-passing-brightgreen) | `ubuntu-26.04` | `26.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-26.04) |
+| Debian 13 (DHI hardened) | ![status](https://img.shields.io/badge/dhi--debian13-pending-lightgrey) | `dhi-debian13` | — | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/dhi-debian13) |
 <!-- variants:end -->
+
+The Debian 13 flavor is built on [Docker Hardened Images](https://docs.docker.com/dhi/) `debian-base` — Docker's minimal, continuously-scanned hardened base — for teams that want a hardened supply chain. It behaves identically to the Ubuntu flavors at run time.
+
+### Installed software versions
+
+<!-- versions:start -->
+| Variant | Azure CLI | PowerShell | As of |
+| --- | --- | --- | --- |
+| Ubuntu 22.04 | 2.91.0 | 7.6.8 | 2026-10-25 |
+| Ubuntu 24.04 | 2.91.0 | 7.6.8 | 2026-10-25 |
+| Ubuntu 26.04 | 2.91.0 | 7.6.8 | 2026-10-25 |
+| Debian 13 (DHI hardened) | — | — | — |
+<!-- versions:end -->
 
 ## Environment variables
 
@@ -71,13 +88,13 @@ docker run -it \
 
 ## Building and CI
 
-The image builds monthly (1st of the month, ~04:17 UTC) and on manual dispatch via [`.github/workflows/docker-image.yml`](.github/workflows/docker-image.yml), as a matrix over Ubuntu 22.04 / 24.04 / 26.04 pushed to Docker Hub. Dependencies are kept current by [Renovate](https://renovatebot.com) (GitHub App).
+The image builds monthly (1st of the month, ~04:17 UTC) and on manual dispatch via [`.github/workflows/docker-image.yml`](.github/workflows/docker-image.yml), as a matrix over Ubuntu 22.04 / 24.04 / 26.04 and the DHI-hardened Debian 13 flavor, pushed to Docker Hub. Dependencies are kept current by [Renovate](https://renovatebot.com) (GitHub App).
 
 To build locally:
 
 ```bash
-docker build ubuntu/                                # builds the ARG default (currently 26.04; Renovate bumps it)
-docker build --build-arg UBUNTU_VERSION=26.04 ubuntu/
+docker build ubuntu/                                                # builds the ARG default (currently 26.04; Renovate bumps it)
+docker build --build-arg BASE_IMAGE=ubuntu:22.04 --build-arg VARIANT=22.04 ubuntu/
 ```
 
 The `XXGITVERXX` placeholder in the Dockerfile is replaced with `git describe --always --long` during CI; local builds keep the literal placeholder in `/etc/git_version`.
