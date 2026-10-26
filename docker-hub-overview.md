@@ -25,7 +25,7 @@ This repository is rebuilt monthly by GitHub Actions (1st of the month, ~04:17 U
 
 - **Rolling tags** (mutable, re-pointed by every build): `latest` (newest LTS, currently Ubuntu 26.04), `ubuntu-22.04`, `ubuntu-24.04`, `ubuntu-26.04`, `dhi-latest`, `dhi-debian13`
 - **Per-build tags** (immutable, protected by Docker Hub tag immutability): `<variant>-<run_number>-<run_id>`, e.g. `26.04-7-40258889030` — always resolves to exactly the image built that run; pin one for reproducibility
-- **Monthly version tags** (immutable): `<year>-<month>-<azure cli version>-<powershell version>`, e.g. `2026-10-2.91.0-7.6.9` — names the exact tool versions inside that month's `latest` build
+- **Monthly version tags** (immutable): `<year>-<month>-<azure cli version>-<powershell version>`, e.g. `2026-10-2.91.0-7.6.9`. This is how Azure CLI / PowerShell versioning works: every monthly build of `latest` is re-tagged with the exact tool versions inside it, so the tag name tells you what a build ships — and pinning one gets you precisely those versions, whatever newer builds have since released.
 
 VSTS agents must be started with account connection information, which is provided through environment variables:
 
@@ -45,13 +45,6 @@ docker run \
 
 Other entrypoints: `./start-once.sh` runs one job and exits; `./start-none.sh` starts no agent and sleeps (debug target).
 
-The October 2026 build includes:
-
-```
-azure-cli 2.91.0
-powershell 7.6.9
-```
-
-Azure CLI and PowerShell are automatically updated to the latest version upon build. Current per-variant versions are documented in the GitHub README. Please use tags to pin versions.
+Azure CLI and PowerShell are automatically updated to the latest version upon each build. To select or check tool versions, use the monthly version tags described above; current per-variant versions are also documented in the GitHub README. Please use tags to pin versions.
 
 Support available: <a href="mailto:consul+client@consultent.ltd?Subject=Support+Needed+for+Azure" target="_blank">consul+docker@consultent.ltd</a>
