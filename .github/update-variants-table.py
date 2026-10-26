@@ -67,10 +67,11 @@ def fetch_conclusions(run_id):
     with urllib.request.build_opener(NoRedirect).open(req, timeout=30) as resp:
         jobs = json.load(resp)["jobs"]
     known = {v[0] for v in VARIANTS}
+    # job display name: "build-push (22.04, ubuntu:22.04, ubuntu-22.04[, latest])"
     return {
         m.group(1): (j["conclusion"] or "unknown")
         for j in jobs
-        if (m := re.search(r"\(([\w.-]+)\)", j["name"])) and m.group(1) in known
+        if (m := re.search(r"\(([\w.-]+)[,)]", j["name"])) and m.group(1) in known
     }
 
 

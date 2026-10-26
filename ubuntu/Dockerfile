@@ -2,10 +2,15 @@
 ARG BASE_IMAGE=ubuntu:26.04
 FROM ${BASE_IMAGE}
 
-# DHI bases (dhi.io) default to a non-root user; this image's contract is root
-USER root
+# DHI bases (dhi.io) default to a nonroot user and ship no root passwd entry,
+# so the numeric UID is required (symbolic "root" would fail passwd lookup);
+# the entry is restored for runtime tools that resolve UID 0 by name.
+USER 0:0
 
 ARG VARIANT=26.04
+RUN case "${VARIANT}" in \
+        dhi-debian13) mkdir -p /root && echo "root:x:0:0:root:/root:/bin/bash" >> /etc/passwd ;; \
+    esac
 LABEL org.opencontainers.image.source="https://github.com/ConsulTent/azure-pipelines-vsts-agent" \
       org.opencontainers.image.base.name="${BASE_IMAGE}" \
       org.opencontainers.image.base.version="${VARIANT}" \
