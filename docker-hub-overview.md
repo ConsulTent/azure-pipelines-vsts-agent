@@ -9,7 +9,7 @@ https://consultent.ltd/
 <br>
 https://github.com/ConsulTent/azure-pipelines-vsts-agent/
 
-DROP-IN replacement for Microsoft VSTS Agent containers, with 100% VSTS Agent compatibility for ~~https://hub.docker.com/r/microsoft/vsts-agent/~~ (now defunct)
+DROP-IN replacement for Microsoft VSTS Agent containers, with 100% VSTS Agent compatibility for ~~[https://hub.docker.com/r/microsoft/vsts-agent/](https://web.archive.org/web/20230108165523/https://hub.docker.com/_/microsoft-azure-pipelines-vsts-agent)~~ (now defunct)
 
 **Variants**: Ubuntu <strike>18.04</strike> 22.04 / 24.04 / 26.04, plus a hardened flavor built on Docker Hardened Images (Debian 13 base)
 
