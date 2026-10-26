@@ -36,10 +36,10 @@ The tables below update after **every** build run: each row shows that variant's
 <!-- variants:start -->
 | Distro | Status | Rolling tag | Current build | Size |
 | --- | --- | --- | --- | --- |
-| Ubuntu 22.04 | ![status](https://img.shields.io/badge/22.04-passing-brightgreen) | `ubuntu-22.04` | `22.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-22.04) |
-| Ubuntu 24.04 | ![status](https://img.shields.io/badge/24.04-passing-brightgreen) | `ubuntu-24.04` | `24.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-24.04) |
-| Ubuntu 26.04 (`latest`) | ![status](https://img.shields.io/badge/26.04-passing-brightgreen) | `ubuntu-26.04` | `26.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-26.04) |
-| Debian 13 (DHI hardened) | ![status](https://img.shields.io/badge/dhi--debian13-pending-lightgrey) | `dhi-debian13` | — | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/dhi-debian13) |
+| Ubuntu 22.04 | ![status](https://img.shields.io/badge/22.04-unknown-red) | `ubuntu-22.04` | `22.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-22.04) |
+| Ubuntu 24.04 | ![status](https://img.shields.io/badge/24.04-unknown-red) | `ubuntu-24.04` | `24.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-24.04) |
+| Ubuntu 26.04 | ![status](https://img.shields.io/badge/26.04-unknown-red) | `ubuntu-26.04` (`latest`) | `26.04-2-40245352308` (2026-10-25) | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/ubuntu-26.04) |
+| Debian 13 (DHI hardened) | ![status](https://img.shields.io/badge/dhi--debian13-unknown-red) | `dhi-debian13` | `—` | ![size](https://img.shields.io/docker/image-size/consultent/azure-pipelines-vsts-agent/dhi-debian13) |
 <!-- variants:end -->
 
 The Debian 13 flavor is built on [Docker Hardened Images](https://docs.docker.com/dhi/) `debian-base` — Docker's minimal, continuously-scanned hardened base — for teams that want a hardened supply chain. It behaves identically to the Ubuntu flavors at run time.
@@ -49,10 +49,10 @@ The Debian 13 flavor is built on [Docker Hardened Images](https://docs.docker.co
 <!-- versions:start -->
 | Variant | Azure CLI | PowerShell | As of |
 | --- | --- | --- | --- |
-| Ubuntu 22.04 | 2.91.0 | 7.6.8 | 2026-10-25 |
-| Ubuntu 24.04 | 2.91.0 | 7.6.8 | 2026-10-25 |
-| Ubuntu 26.04 | 2.91.0 | 7.6.8 | 2026-10-25 |
-| Debian 13 (DHI hardened) | — | — | — |
+| Ubuntu 22.04 | unknown | unknown | 2026-10-26 |
+| Ubuntu 24.04 | unknown | unknown | 2026-10-26 |
+| Ubuntu 26.04 | unknown | unknown | 2026-10-26 |
+| Debian 13 (DHI hardened) | unknown | unknown | 2026-10-26 |
 <!-- versions:end -->
 
 ## Environment variables
