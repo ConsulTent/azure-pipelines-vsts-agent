@@ -12,7 +12,9 @@ USER 0:0
 
 ARG VARIANT=26.04
 RUN case "${VARIANT}" in \
-        dhi-debian13) mkdir -p /root && grep -q "^root:" /etc/passwd || echo "root:x:0:0:root:/root:/bin/bash" >> /etc/passwd ;; \
+        dhi-debian13) mkdir -p /root \
+            && grep -q "^root:" /etc/passwd || echo "root:x:0:0:root:/root:/bin/bash" >> /etc/passwd \
+            && touch /etc/shells ;; \
     esac
 LABEL org.opencontainers.image.source="https://github.com/ConsulTent/azure-pipelines-vsts-agent" \
       org.opencontainers.image.base.name="${BASE_IMAGE}" \
