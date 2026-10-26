@@ -76,7 +76,7 @@ The image builds monthly (1st of the month, ~04:17 UTC) and on manual dispatch v
 To build locally:
 
 ```bash
-docker build ubuntu/                                # defaults to Ubuntu 22.04
+docker build ubuntu/                                # builds the ARG default (currently 26.04; Renovate bumps it)
 docker build --build-arg UBUNTU_VERSION=26.04 ubuntu/
 ```
 
