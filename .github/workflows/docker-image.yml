@@ -15,7 +15,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ubuntu: ['22.04', '24.04', '26.04']
+        include:
+          - variant: "22.04"
+            base: "ubuntu:22.04"
+            rolling: "ubuntu-22.04"
+          - variant: "24.04"
+            base: "ubuntu:24.04"
+            rolling: "ubuntu-24.04"
+          - variant: "26.04"
+            base: "ubuntu:26.04"
+            rolling: "ubuntu-26.04"
+            is_latest: true
+          - variant: "dhi-debian13"
+            base: "dhi.io/debian-base:trixie" # Docker Hardened Images base; needs dhi.io login
+            rolling: "dhi-debian13"
     steps:
       - name: Checkout (path context required so the sed below reaches the build)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -30,9 +43,9 @@ jobs:
         run: |
           {
             echo "tags<<EOF"
-            echo "consultent/azure-pipelines-vsts-agent:ubuntu-${{ matrix.ubuntu }}"
-            echo "consultent/azure-pipelines-vsts-agent:${{ matrix.ubuntu }}-${{ github.run_number }}-${{ github.run_id }}"
-            if [ "${{ matrix.ubuntu }}" = "26.04" ]; then
+            echo "consultent/azure-pipelines-vsts-agent:${{ matrix.rolling }}"
+            echo "consultent/azure-pipelines-vsts-agent:${{ matrix.variant }}-${{ github.run_number }}-${{ github.run_id }}"
+            if [ "${{ matrix.is_latest }}" = "true" ]; then
               echo "consultent/azure-pipelines-vsts-agent:latest"
             fi
             echo "EOF"
@@ -47,12 +60,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PAT }}
 
+      - name: Login to dhi.io (hardened base registry; same Docker account)
+        if: matrix.variant == 'dhi-debian13'
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4
+        with:
+          registry: dhi.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PAT }}
+
       - name: Build & push
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
           context: ubuntu # path context; the default Git context would ignore the sed above
           build-args: |
-            UBUNTU_VERSION=${{ matrix.ubuntu }}
+            VARIANT=${{ matrix.variant }}
+            BASE_IMAGE=${{ matrix.base }}
           push: true
           tags: ${{ steps.tags.outputs.tags }}
 
@@ -60,21 +82,47 @@ jobs:
     needs: build-push
     if: always() # the status board updates every run, success or failure
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
       contents: write # job-scoped; the build legs stay contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - name: Update variants table
+      - name: Login to Docker Hub (for the monthly version tag push)
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PAT }}
+
+      - name: Update README tables
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: tables
         run: |
           python3 .github/update-variants-table.py \
             --run ${{ github.run_id }} \
             --number ${{ github.run_number }} \
-            --date "$(date -u +%F)"
+            --date "$(date -u +%F)" | tee tables.log
+          VT="$(sed -n 's/^version_tag: //p' tables.log)"
+          if [ -n "$VT" ] && [ "$VT" != "(none)" ]; then
+            echo "version_tag=$VT" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push monthly version tag (manifest-only re-tag of ubuntu-26.04)
+        if: steps.tables.outputs.version_tag != ''
+        env:
+          VERSION_TAG: ${{ steps.tables.outputs.version_tag }}
+        run: |
+          set -euo pipefail
+          case "$VERSION_TAG" in
+            [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9]*.*-*) ;; # <year>-<month>-<az>-<pwsh>
+            *) echo "refusing unexpected version tag: $VERSION_TAG"; exit 1 ;;
+          esac
+          docker pull consultent/azure-pipelines-vsts-agent:ubuntu-26.04
+          docker tag consultent/azure-pipelines-vsts-agent:ubuntu-26.04 \
+                     "consultent/azure-pipelines-vsts-agent:$VERSION_TAG"
+          docker push "consultent/azure-pipelines-vsts-agent:$VERSION_TAG"
 
       - name: Commit and push if changed
         run: |
