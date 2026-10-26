@@ -27,7 +27,7 @@ jobs:
             rolling: "ubuntu-26.04"
             is_latest: true
           - variant: "dhi-debian13"
-            base: "dhi.io/debian-base:trixie" # Docker Hardened Images base; needs dhi.io login
+            base: "dhi.io/debian-base:trixie-dev" # DHI hardened base; -dev ships apt; needs dhi.io login
             rolling: "dhi-debian13"
     steps:
       - name: Checkout (path context required so the sed below reaches the build)
